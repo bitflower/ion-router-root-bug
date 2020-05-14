@@ -1,14 +1,14 @@
-import '@ionic/core';
+import "@ionic/core";
 
-import { Component, Element, Listen, Prop, State, h } from '@stencil/core';
-import { UserData } from '../../providers/user-data';
-import { Plugins } from '@capacitor/core';
+import { Component, Element, Listen, Prop, State, h } from "@stencil/core";
+import { UserData } from "../../providers/user-data";
+import { Plugins } from "@capacitor/core";
 
 const { SplashScreen } = Plugins;
 
 @Component({
-  tag: 'app-root',
-  styleUrl: 'app-root.css'
+  tag: "app-root",
+  styleUrl: "app-root.css",
 })
 export class AppRoot {
   hasSeenTutorial = false;
@@ -19,32 +19,32 @@ export class AppRoot {
 
   @State() loggedIn = false;
 
-  @Prop({ context: 'isServer' }) isServer: boolean;
+  @Prop({ context: "isServer" }) isServer: boolean;
 
   appPages = [
     {
-      title: 'Schedule',
-      url: '/schedule',
-      icon: 'calendar'
+      title: "Schedule",
+      url: "/schedule",
+      icon: "calendar",
     },
     {
-      title: 'Speakers',
-      url: '/speakers',
-      icon: 'people'
+      title: "Speakers",
+      url: "/speakers",
+      icon: "people",
     },
     {
-      title: 'Map',
-      url: '/map',
-      icon: 'map'
+      title: "Map",
+      url: "/map",
+      icon: "map",
     },
     {
-      title: 'About',
-      url: '/about',
-      icon: 'information-circle'
-    }
+      title: "About",
+      url: "/about",
+      icon: "information-circle",
+    },
   ];
 
-  @Listen('ionRouteWillChange')
+  @Listen("ionRouteWillChange")
   routeChanged() {
     this.el.forceUpdate();
   }
@@ -65,7 +65,7 @@ export class AppRoot {
   }
 
   async checkLoginStatus() {
-    const loggedIn = this.loggedIn = await UserData.isLoggedIn();
+    const loggedIn = (this.loggedIn = await UserData.isLoggedIn());
     return loggedIn;
   }
 
@@ -88,8 +88,8 @@ export class AppRoot {
     return false;
   }
 
-  @Listen('userDidLogIn')
-  @Listen('userDidLogOut')
+  @Listen("userDidLogIn")
+  @Listen("userDidLogOut")
   updateLoggedInStatus(loggedEvent) {
     this.loggedIn = loggedEvent.detail.loginStatus;
   }
@@ -97,9 +97,9 @@ export class AppRoot {
   renderRouter() {
     return (
       <ion-router useHash={false}>
-        <ion-route-redirect from="/" to={this.hasSeenTutorial ? '/schedule' : '/tutorial'} />
+        {/* <ion-route-redirect from="/" to={this.hasSeenTutorial ? '/schedule' : '/tutorial'} /> */}
 
-        <ion-route component="page-tabs">
+        {/* <ion-route component="page-tabs">
           <ion-route url="/schedule" component="tab-schedule">
             <ion-route component="page-schedule"></ion-route>
             <ion-route url="/session/:sessionId" component="page-session" componentProps={{ goback: '/schedule' }}></ion-route>
@@ -114,24 +114,27 @@ export class AppRoot {
           <ion-route url="/map" component="tab-map"></ion-route>
 
           <ion-route url="/about" component="tab-about"></ion-route>
-        </ion-route>
+        </ion-route> */}
 
         <ion-route url="/tutorial" component="page-tutorial"></ion-route>
         <ion-route url="/login" component="page-login"></ion-route>
         <ion-route url="/account" component="page-account"></ion-route>
         <ion-route url="/signup" component="page-signup"></ion-route>
-        <ion-route url="/support" component="page-support"></ion-route>
+        <ion-route url="/signup/confirm" component="page-support"></ion-route>
+        <ion-route-redirect from="/" to="signup" />
       </ion-router>
     );
   }
 
   render() {
     return (
-      <ion-app class={{
-        'dark-theme': this.dark
-      }}>
+      <ion-app
+        class={{
+          "dark-theme": this.dark,
+        }}
+      >
         {this.renderRouter()}
-        <ion-split-pane content-id="menu-content">
+        {/* <ion-split-pane content-id="menu-content">
           <ion-menu content-id="menu-content">
             <ion-content forceOverscroll={false}>
               <ion-list lines="none">
@@ -204,12 +207,12 @@ export class AppRoot {
                 </ion-menu-toggle>
               </ion-list>
             </ion-content>
-          </ion-menu>
+          </ion-menu> 
 
           <ion-router-outlet animated={false} id="menu-content"></ion-router-outlet>
-        </ion-split-pane>
+        </ion-split-pane>*/}
+        <ion-nav />
       </ion-app>
     );
   }
 }
-

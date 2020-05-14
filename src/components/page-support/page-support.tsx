@@ -1,80 +1,45 @@
-import { Build, Component, State, h } from '@stencil/core';
+import { Build, Component, State, h } from "@stencil/core";
 
-import { toastController } from '@ionic/core';
+import { toastController } from "@ionic/core";
 
 @Component({
-  tag: 'page-support',
-  styleUrl: 'page-support.css',
+  tag: "page-support",
+  styleUrl: "page-support.css",
 })
 export class PageSupport {
   @State() supportQuestion = {
     valid: false,
-    value: null
+    value: null,
   };
   @State() submitted = false;
 
   async componentDidLoad() {
     if (Build.isBrowser) {
       const toast = await toastController.create({
-        message: 'This does not actually send a support request.',
-        duration: 3000
+        message: "This does not actually send a support request.",
+        duration: 3000,
       });
       toast.present();
     }
   }
 
-  handleSupportQuestion(ev) {
-    this.validateQuestion();
-    this.supportQuestion = {
-      ...this.supportQuestion,
-      value: ev.target.value
-    };
-  }
-
-  validateQuestion() {
-    if (this.supportQuestion.value && this.supportQuestion.value.length > 0) {
-      this.supportQuestion.valid = true;
-
-      this.supportQuestion = {
-        ...this.supportQuestion,
-        valid: true
-      };
-
-      return;
-    }
-
-    this.supportQuestion = {
-      ...this.supportQuestion,
-      valid: false
-    };
-  }
-
-  async submit(e) {
-    e.preventDefault();
-    this.validateQuestion();
-    this.submitted = true;
-
-    if (this.supportQuestion.valid) {
-      this.supportQuestion = {
-        ...this.supportQuestion,
-        value: ''
-      };
-
-      this.submitted = false;
-
-      const toast = await toastController.create({
-        message: 'Your support request has been sent.',
-        duration: 3000
-      });
-      toast.present();
-    }
-  }
+  private goToHome = () => {
+    console.log("goToHome");
+    const router: HTMLIonRouterElement = window.document.querySelector(
+      "ion-router"
+    );
+    router.back();
+    // router.push("signup");
+  };
 
   // If the user enters text in the support question and then navigates
   // without submitting first, ask if they meant to leave the page
   ionViewCanLeave() {
     // If the support message is empty we should just navigate
-    if (!this.supportQuestion.value || this.supportQuestion.value.trim().length === 0) {
+    if (
+      !this.supportQuestion.value ||
+      this.supportQuestion.value.trim().length === 0
+    ) {
       return true;
     }
   }
@@ -93,28 +58,15 @@ export class PageSupport {
 
       <ion-content>
         <div class="support-logo">
-          <img src="/assets/img/appicon.svg" alt="Ionic Logo"/>
+          <img src="/assets/img/appicon.svg" alt="Ionic Logo" />
         </div>
 
-        <form novalidate>
-          <ion-list no-lines>
-            <ion-item>
-              <ion-label position="stacked" color="primary">Enter your support message below</ion-label>
-              <ion-textarea name="supportQuestion" value={this.supportQuestion.value} onInput={(ev) => this.handleSupportQuestion(ev)} rows={6} required></ion-textarea>
-            </ion-item>
-          </ion-list>
-
-          <ion-text color="danger">
-            <p hidden={this.supportQuestion.valid || this.submitted === false} class="ion-padding-left">
-              Support message is required
-            </p>
-          </ion-text>
-
-          <div class="ion-padding">
-            <ion-button onClick={(e) => this.submit(e)} expand="block" type="submit">Submit</ion-button>
-          </div>
-        </form>
-      </ion-content>
+        <div class="ion-padding">
+          <ion-button onClick={this.goToHome} expand="block">
+            Back to home (breaks 2nd time)
+          </ion-button>
+        </div>
+      </ion-content>,
     ];
   }
 }
